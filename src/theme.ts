@@ -79,6 +79,16 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           color: "#fff",
+          borderBottom: "none",
+          "&.MuiTableCell-head": {
+            fontSize: "14px",
+            fontWeight: 700,
+            letterSpacing: "1px",
+          },
+          "&.MuiTableCell-body": {
+            fontSize: "14px",
+            fontWeight: 500,
+          },
         },
       },
     },

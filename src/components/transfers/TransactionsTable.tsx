@@ -11,11 +11,15 @@ import {
   Paper,
   Typography,
   IconButton,
+  Box,
+  Container,
 } from "@mui/material";
 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+
+import SearchBar from "../common/SearchBar";
 
 export default function TransactionsTable() {
   const transactions = [
@@ -52,55 +56,71 @@ export default function TransactionsTable() {
   };
 
   return (
-    <TableContainer component={Paper}>
-      <Typography variant="h5" sx={{ p: 2 }}>
-        Transfers List
-      </Typography>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>ID</TableCell>
-            <TableCell>Plate</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell>Client</TableCell>
-            <TableCell>Transmitter</TableCell>
-            <TableCell>Service</TableCell>
-            <TableCell>Created At</TableCell>
-            <TableCell align="center">Actions</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {transactions.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.plate}</TableCell>
-              <TableCell>{row.type}</TableCell>
-              <TableCell>{row.client}</TableCell>
-              <TableCell>{row.transmitter}</TableCell>
-              <TableCell>{row.service}</TableCell>
-              <TableCell>
-                {new Date(row.created_at).toLocaleString("es-ES", {
-                  dateStyle: "short",
-                  timeStyle: "short",
-                })}
-              </TableCell>
-              <TableCell align="center">
-                <IconButton color="primary" onClick={() => handleView(row.id)}>
-                  <VisibilityIcon />
-                </IconButton>
+    <Container>
+      <Box sx={{ my: 2 }}>
+        <Typography variant="h4" fontWeight={800} sx={{ p: 2 }}>
+          Transfers List
+        </Typography>
+      </Box>
 
-                <IconButton color="primary" onClick={() => handleEdit(row.id)}>
-                  <EditIcon />
-                </IconButton>
+      <Box sx={{ mb: 2 }}>
+        <SearchBar />
+      </Box>
 
-                <IconButton color="error" onClick={() => handleDelete(row.id)}>
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Plate</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Client</TableCell>
+              <TableCell>Transmitter</TableCell>
+              <TableCell>Service</TableCell>
+              <TableCell>Created At</TableCell>
+              <TableCell align="center">Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {transactions.map((row) => (
+              <TableRow key={row.id} hover sx={{ cursor: "pointer" }}>
+                <TableCell>{row.id}</TableCell>
+                <TableCell>{row.plate}</TableCell>
+                <TableCell>{row.type}</TableCell>
+                <TableCell>{row.client}</TableCell>
+                <TableCell>{row.transmitter}</TableCell>
+                <TableCell>{row.service}</TableCell>
+                <TableCell>
+                  {new Date(row.created_at).toLocaleString("es-ES", {
+                    dateStyle: "short",
+                    timeStyle: "short",
+                  })}
+                </TableCell>
+                <TableCell align="center">
+                  <IconButton
+                    color="primary"
+                    onClick={() => handleView(row.id)}
+                  >
+                    <VisibilityIcon />
+                  </IconButton>
+                  <IconButton
+                    color="primary"
+                    onClick={() => handleEdit(row.id)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    color="error"
+                    onClick={() => handleDelete(row.id)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Container>
   );
 }
