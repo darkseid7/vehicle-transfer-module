@@ -71,7 +71,7 @@ export default function Page() {
               // color={false ? "error" : "primary"}
             />
           </FormControl>
-          <Button variant="contained" onClick={redirect}>
+          <Button variant="contained" color="primary" onClick={redirect}>
             {/* Todo: spinner here */}
             Login
           </Button>

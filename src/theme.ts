@@ -15,6 +15,9 @@ const theme = createTheme({
       default: "#1B2431",
       paper: "#273142",
     },
+    primary: {
+      main: "#4880FF",
+    },
   },
 
   typography: {
@@ -37,18 +40,18 @@ const theme = createTheme({
       },
     },
 
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          color: "#fff",
-          backgroundColor: "#4880FF",
-          textTransform: "none",
-          "&:hover": {
-            backgroundColor: "#3A6CEC",
-          },
-        },
-      },
-    },
+    // MuiButton: {
+    //   styleOverrides: {
+    //     root: {
+    //       color: "#fff",
+    //       backgroundColor: "#4880FF",
+    //       textTransform: "none",
+    //       "&:hover": {
+    //         backgroundColor: "#3A6CEC",
+    //       },
+    //     },
+    //   },
+    // },
 
     MuiInputBase: {
       styleOverrides: {
