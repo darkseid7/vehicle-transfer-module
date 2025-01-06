@@ -1,16 +1,16 @@
 "use client";
 
 import React, { useState, FormEvent } from "react";
-import {
-  Container,
-  Typography,
-  Button,
-  Card,
-  TextField,
-  Box,
-  FormControl,
-  FormLabel,
-} from "@mui/material";
+
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+
 import { login } from "./actions";
 
 export default function Page() {
@@ -84,7 +84,6 @@ export default function Page() {
             Login
           </Typography>
 
-          {/* 4. Reemplaza la forma original con onSubmit manual */}
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -124,7 +123,6 @@ export default function Page() {
               />
             </FormControl>
 
-            {/* 7. Botón de submit  */}
             <Button type="submit" variant="contained" color="primary">
               Login
             </Button>
