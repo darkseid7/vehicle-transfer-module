@@ -19,10 +19,11 @@ export default function Page() {
   const [errors, setErrors] = useState({
     email: "",
     password: "",
+    invalidCredentials: "",
   });
 
   function validateForm() {
-    let tempErrors = { email: "", password: "" };
+    let tempErrors = { email: "", password: "", invalidCredentials: "" };
     let isValid = true;
 
     if (!email.trim()) {
@@ -40,7 +41,7 @@ export default function Page() {
       tempErrors.password = "Password is required";
       isValid = false;
     } else if (password.length < 8) {
-      tempErrors.password = "Password must be at least 6 characters";
+      tempErrors.password = "Password must be at least 8 characters";
       isValid = false;
     }
 
@@ -58,7 +59,13 @@ export default function Page() {
       formData.append("email", email);
       formData.append("password", password);
 
-      await login(formData);
+      let response = await login(formData);
+
+      if (response.error === "Invalid login credentials") {
+        setErrors({ ...errors, invalidCredentials: response.error });
+      }
+
+      console.log(response, " response from login function");
     }
   }
 
@@ -84,6 +91,11 @@ export default function Page() {
             Login
           </Typography>
 
+          {errors.invalidCredentials && (
+            <Typography variant="h6" align="center" color="error">
+              {errors.invalidCredentials}
+            </Typography>
+          )}
           <Box
             component="form"
             onSubmit={handleSubmit}
