@@ -6,6 +6,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   //todo: redirect to login page if the user is not authenticated
+  //todo: Protect routes that require authentication and roles
   if (pathname === "/") {
     return NextResponse.redirect(new URL("/login", request.url));
   }
