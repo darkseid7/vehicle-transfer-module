@@ -13,12 +13,14 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useUser } from "@/app/context/userContext";
 
 interface TopBarProps {
   onMenuClick: () => void;
 }
 
 export default function TopBar({ onMenuClick }: TopBarProps) {
+  const { user, role } = useUser();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -57,7 +59,10 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
         <Box sx={{ flexGrow: 1 }} />
 
         <Typography variant="body1" sx={{ mr: 2 }}>
-          John Doe
+          {user?.email}
+        </Typography>
+        <Typography variant="body2" sx={{ mr: 2 }}>
+          {role}
         </Typography>
 
         <IconButton onClick={handleAvatarClick} sx={{ p: 0 }}>

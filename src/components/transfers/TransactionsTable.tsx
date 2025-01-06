@@ -15,10 +15,10 @@ import {
   Container,
 } from "@mui/material";
 
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import { RequirePermission } from "@/components/common/RequirePermission";
+import { PERMISSIONS } from "@/app/permissions";
 import SearchBar from "../common/SearchBar";
 
 export default function TransactionsTable() {
@@ -78,7 +78,9 @@ export default function TransactionsTable() {
               <TableCell>Transmitter</TableCell>
               <TableCell>Service</TableCell>
               <TableCell>Created At</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <RequirePermission permission={PERMISSIONS.EDIT_TRANSFERS}>
+                <TableCell align="center">Actions</TableCell>
+              </RequirePermission>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -96,26 +98,28 @@ export default function TransactionsTable() {
                     timeStyle: "short",
                   })}
                 </TableCell>
-                <TableCell align="center">
-                  <IconButton
-                    color="primary"
-                    onClick={() => handleView(row.id)}
-                  >
-                    <VisibilityIcon />
-                  </IconButton>
-                  <IconButton
-                    color="primary"
-                    onClick={() => handleEdit(row.id)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    color="error"
-                    onClick={() => handleDelete(row.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
+                <RequirePermission permission={PERMISSIONS.EDIT_TRANSFERS}>
+                  <TableCell align="center">
+                    <RequirePermission permission={PERMISSIONS.EDIT_TRANSFERS}>
+                      <IconButton
+                        color="primary"
+                        onClick={() => handleEdit(row.id)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </RequirePermission>
+                    <RequirePermission
+                      permission={PERMISSIONS.DELETE_TRANSFERS}
+                    >
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDelete(row.id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </RequirePermission>
+                  </TableCell>
+                </RequirePermission>
               </TableRow>
             ))}
           </TableBody>
