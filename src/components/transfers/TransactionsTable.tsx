@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import {
   Table,
@@ -17,43 +15,42 @@ import {
 
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+
 import { RequirePermission } from "@/components/common/RequirePermission";
 import { PERMISSIONS } from "@/app/permissions";
+
+import { createClient } from "@/utils/supabase/server";
 import SearchBar from "../common/SearchBar";
 
-export default function TransactionsTable() {
-  const transactions = [
-    {
-      id: 1,
-      plate: "2647KLR",
-      type: "Venta",
-      client: "31002483T",
-      transmitter: "30482746L",
-      service: 900,
-      created_at: "2024-12-17T18:00:00",
-    },
-    {
-      id: 2,
-      plate: "9821BHF",
-      type: "Cesión",
-      client: "52018492F",
-      transmitter: "47012845N",
-      service: 450,
-      created_at: "2024-12-16T10:30:00",
-    },
-  ];
+export default async function TransactionsTable({
+  searchParams,
+}: {
+  searchParams: { q?: string };
+}) {
+  const supabase = await createClient();
 
-  const handleView = (id: number) => {
-    console.log("hadle view", id);
-  };
+  const query = searchParams.q || "";
 
-  const handleEdit = (id: number) => {
-    console.log("handle Edit", id);
-  };
+  let queryBuilder = supabase
+    .from("transfers")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-  const handleDelete = (id: number) => {
-    console.log("Handle delete:", id);
-  };
+  if (query) {
+    queryBuilder = queryBuilder.or(
+      `plate.ilike.%${query}%,type.ilike.%${query}%,client.ilike.%${query}%`
+    );
+  }
+
+  const { data: transactions, error } = await queryBuilder;
+
+  if (error) {
+    return (
+      <Box sx={{ textAlign: "center", mt: 4 }}>
+        <Typography color="error">Failed to load transfers.</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Container>
@@ -71,7 +68,6 @@ export default function TransactionsTable() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
               <TableCell>Plate</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>Client</TableCell>
@@ -84,9 +80,8 @@ export default function TransactionsTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {transactions.map((row) => (
-              <TableRow key={row.id} hover sx={{ cursor: "pointer" }}>
-                <TableCell>{row.id}</TableCell>
+            {transactions?.map((row) => (
+              <TableRow key={row.id} hover>
                 <TableCell>{row.plate}</TableCell>
                 <TableCell>{row.type}</TableCell>
                 <TableCell>{row.client}</TableCell>
@@ -100,21 +95,16 @@ export default function TransactionsTable() {
                 </TableCell>
                 <RequirePermission permission={PERMISSIONS.EDIT_TRANSFERS}>
                   <TableCell align="center">
-                    <RequirePermission permission={PERMISSIONS.EDIT_TRANSFERS}>
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleEdit(row.id)}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    </RequirePermission>
+                    <IconButton
+                      color="primary"
+                      href={`/transfers/edit/${row.id}`}
+                    >
+                      <EditIcon />
+                    </IconButton>
                     <RequirePermission
                       permission={PERMISSIONS.DELETE_TRANSFERS}
                     >
-                      <IconButton
-                        color="error"
-                        onClick={() => handleDelete(row.id)}
-                      >
+                      <IconButton type="submit" color="error">
                         <DeleteIcon />
                       </IconButton>
                     </RequirePermission>
