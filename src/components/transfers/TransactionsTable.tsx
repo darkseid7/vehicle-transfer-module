@@ -66,7 +66,7 @@ export default async function TransactionsTable({
         <SearchBar />
         <RequirePermission permission={PERMISSIONS.CREATE_TRANSFERS}>
           <Button color="primary" variant="contained">
-            <Link href={`/transfers/new`}>New Transfer</Link>
+            <Link href={`/transfer`}>New Transfer</Link>
           </Button>
         </RequirePermission>
       </Box>
@@ -104,9 +104,16 @@ export default async function TransactionsTable({
                   <TableCell align="center">
                     <IconButton
                       color="primary"
-                      href={`/transfers/edit/${row.id}`}
+                      sx={{
+                        textDecoration: "none",
+                        "&:visited": {
+                          color: "primary",
+                        },
+                      }}
                     >
-                      <EditIcon />
+                      <Link href={`/transfer/${row.id}`}>
+                        <EditIcon />
+                      </Link>
                     </IconButton>
                     <RequirePermission
                       permission={PERMISSIONS.DELETE_TRANSFERS}
