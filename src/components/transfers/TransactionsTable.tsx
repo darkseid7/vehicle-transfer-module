@@ -11,6 +11,7 @@ import {
   IconButton,
   Box,
   Container,
+  Button,
 } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
@@ -21,6 +22,7 @@ import { PERMISSIONS } from "@/app/permissions";
 
 import { createClient } from "@/utils/supabase/server";
 import SearchBar from "../common/SearchBar";
+import Link from "next/link";
 
 export default async function TransactionsTable({
   searchParams,
@@ -60,8 +62,13 @@ export default async function TransactionsTable({
         </Typography>
       </Box>
 
-      <Box sx={{ mb: 2 }}>
+      <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 2 }}>
         <SearchBar />
+        <RequirePermission permission={PERMISSIONS.CREATE_TRANSFERS}>
+          <Button color="primary" variant="contained">
+            <Link href={`/transfers/new`}>New Transfer</Link>
+          </Button>
+        </RequirePermission>
       </Box>
 
       <TableContainer component={Paper}>
