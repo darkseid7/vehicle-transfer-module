@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
 import { createTransfer } from "./actions";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Page() {
   const [plate, setPlate] = useState("");
@@ -21,6 +22,8 @@ export default function Page() {
   const [client, setClient] = useState("");
   const [transmitter, setTransmitter] = useState("");
   const [service, setService] = useState("");
+
+  const [users, setUsers] = useState<any[]>([]);
   const [errors, setErrors] = useState({
     plate: "",
     type: "",
@@ -28,6 +31,24 @@ export default function Page() {
     transmitter: "",
     service: "",
   });
+
+  useEffect(() => {
+    async function fetchData() {
+      const supabase = createClient();
+
+      const { data: usersData, error: usersError } = await supabase
+        .from("users")
+        .select("*");
+
+      if (usersError) {
+        console.error("Error fetching users:", usersError);
+      } else {
+        setUsers(usersData || []);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   function validateForm() {
     let tempErrors = {
@@ -151,7 +172,11 @@ export default function Page() {
                 error={Boolean(errors.client)}
               >
                 <MenuItem value="">Select client</MenuItem>
-                {/* todo: get the data from supabase */}
+                {users.map((u: any) => (
+                  <MenuItem key={u.id} value={u.document}>
+                    {u.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
 
@@ -166,7 +191,11 @@ export default function Page() {
                 error={Boolean(errors.transmitter)}
               >
                 <MenuItem value="">Select transmitter</MenuItem>
-                {/* todo: get the data from supabase */}
+                {users.map((u: any) => (
+                  <MenuItem key={u.id} value={u.document}>
+                    {u.name}
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
 

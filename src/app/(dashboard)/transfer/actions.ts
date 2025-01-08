@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
 export async function createTransfer(formData: FormData) {
   const supabase = await createClient();
@@ -29,5 +30,5 @@ export async function createTransfer(formData: FormData) {
     return { error: "Error creating transfer." };
   }
 
-  return { success: true };
+  redirect("/dashboard");
 }
