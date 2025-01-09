@@ -30,7 +30,7 @@ export default function Page() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const validateForm = () => {
-    let tempErrors = { email: "", password: "", invalidCredentials: "" };
+    const tempErrors = { email: "", password: "", invalidCredentials: "" };
     let isValid = true;
 
     if (!email.trim()) {

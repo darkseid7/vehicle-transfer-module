@@ -30,6 +30,12 @@ interface TransferFormProps {
   onSubmit: (data: FormData) => Promise<{ error?: string } | undefined>;
 }
 
+interface User {
+  id: string;
+  document: string;
+  name: string;
+}
+
 export default function TransferForm({
   title = "Create Transfer",
   initialValues = {},
@@ -43,7 +49,7 @@ export default function TransferForm({
   );
 
   const [service, setService] = useState(initialValues.service || "");
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [errors, setErrors] = useState({
     plate: "",
     type: "",
@@ -78,7 +84,7 @@ export default function TransferForm({
   }, []);
 
   function validateForm() {
-    let tempErrors = {
+    const tempErrors = {
       plate: "",
       type: "",
       client: "",
@@ -204,7 +210,7 @@ export default function TransferForm({
                 error={Boolean(errors.client)}
               >
                 <MenuItem value="">Select client</MenuItem>
-                {users.map((u: any) => (
+                {users.map((u) => (
                   <MenuItem key={u.id} value={u.document}>
                     {u.name}
                   </MenuItem>
@@ -223,7 +229,7 @@ export default function TransferForm({
                 error={Boolean(errors.transmitter)}
               >
                 <MenuItem value="">Select transmitter</MenuItem>
-                {users.map((u: any) => (
+                {users.map((u) => (
                   <MenuItem key={u.id} value={u.document}>
                     {u.name}
                   </MenuItem>
