@@ -12,6 +12,7 @@ import {
   Divider,
 } from "@mui/material";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import Link from "next/link";
 
 const drawerWidth = 240;
 
@@ -33,9 +34,20 @@ export default function SideMenu({
           variant="h2"
           align="center"
           noWrap
-          sx={{ color: "white", letterSpacing: 4, width: "100%" }}
+          sx={{
+            color: "white",
+            letterSpacing: 4,
+            width: "100%",
+            "& a": {
+              textDecoration: "none",
+              color: "inherit",
+              "&:visited": {
+                color: "inherit",
+              },
+            },
+          }}
         >
-          VTM
+          <Link href={"/dashboard"}>VTM</Link>
         </Typography>
       </Toolbar>
       <Divider />
@@ -69,7 +81,7 @@ export default function SideMenu({
           keepMounted: true,
         }}
         sx={(theme) => ({
-          display: { xs: "block", sm: "none" },
+          display: { xs: "block", md: "none" },
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
@@ -83,7 +95,7 @@ export default function SideMenu({
       <Drawer
         variant="permanent"
         sx={(theme) => ({
-          display: { xs: "none", sm: "block" },
+          display: { xs: "none", md: "block" },
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",

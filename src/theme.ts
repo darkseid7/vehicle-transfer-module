@@ -82,6 +82,7 @@ const theme = createTheme({
             fontSize: "14px",
             fontWeight: 700,
             letterSpacing: "1px",
+            backgroundColor: "#323D4E",
           },
           "&.MuiTableCell-body": {
             fontSize: "14px",

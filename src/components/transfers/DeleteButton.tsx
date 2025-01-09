@@ -62,7 +62,7 @@ export default function DeleteButton({ id }: DeleteButtonProps) {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Delete Transfer?</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText color="white">
             Are you sure you want to delete this transfer? This action cannot be
             undone.
           </DialogContentText>

@@ -33,10 +33,14 @@ export default function SearchBar() {
         display: "flex",
         alignItems: "center",
         width: "100%",
+        backgroundColor: "#323D4E",
       }}
     >
       <InputBase
-        sx={{ ml: 1, flex: 1 }}
+        sx={{
+          ml: 1,
+          flex: 1,
+        }}
         placeholder="Search..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}

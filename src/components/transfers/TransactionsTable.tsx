@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 import { RequirePermission } from "@/components/common/RequirePermission";
 import { PERMISSIONS } from "@/app/permissions";
@@ -66,9 +65,24 @@ export default async function TransactionsTable({
       <Box sx={{ mb: 2, display: "flex", alignItems: "center", gap: 2 }}>
         <SearchBar />
         <RequirePermission permission={PERMISSIONS.CREATE_TRANSFERS}>
-          <Button color="primary" variant="contained">
-            <Link href={`/transfer`}>New Transfer</Link>
-          </Button>
+          <Link
+            href="/transfer"
+            style={{
+              textDecoration: "none",
+            }}
+          >
+            <Button
+              color="primary"
+              variant="contained"
+              sx={{
+                "&:visited": {
+                  color: "inherit",
+                },
+              }}
+            >
+              New Transfer
+            </Button>
+          </Link>
         </RequirePermission>
       </Box>
 
@@ -103,19 +117,23 @@ export default async function TransactionsTable({
                 </TableCell>
                 <RequirePermission permission={PERMISSIONS.EDIT_TRANSFERS}>
                   <TableCell align="center">
-                    <IconButton
-                      color="primary"
-                      sx={{
+                    <Link
+                      href={`/transfer/${row.id}`}
+                      style={{
                         textDecoration: "none",
-                        "&:visited": {
-                          color: "primary",
-                        },
                       }}
                     >
-                      <Link href={`/transfer/${row.id}`}>
+                      <IconButton
+                        color="primary"
+                        sx={{
+                          "&:visited": {
+                            color: "inherit",
+                          },
+                        }}
+                      >
                         <EditIcon />
-                      </Link>
-                    </IconButton>
+                      </IconButton>
+                    </Link>
                     <RequirePermission
                       permission={PERMISSIONS.DELETE_TRANSFERS}
                     >

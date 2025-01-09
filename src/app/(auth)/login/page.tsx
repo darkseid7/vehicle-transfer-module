@@ -152,9 +152,8 @@ export default function Page() {
               variant="contained"
               color="primary"
               disabled={isPending}
-              startIcon={isPending && <CircularProgress size={20} />}
             >
-              {isPending ? "Logging in" : "Login"}
+              {isPending ? <CircularProgress size={20} /> : "Login"}
             </Button>
           </Box>
         </Box>

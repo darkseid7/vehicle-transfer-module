@@ -45,8 +45,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
     <AppBar
       position="fixed"
       sx={(theme) => ({
-        width: { sm: `calc(100% - 240px)` },
-        ml: { sm: "240px" },
+        width: { md: `calc(100% - 240px)` },
         backgroundColor: theme.palette.background.paper,
       })}
     >
@@ -56,7 +55,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
           aria-label="open drawer"
           edge="start"
           onClick={onMenuClick}
-          sx={{ mr: 2, display: { sm: "none" } }}
+          sx={{ mr: 2, display: { md: "none" } }}
         >
           <MenuIcon />
         </IconButton>
@@ -98,7 +97,13 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
           <MenuItem disabled>Profile</MenuItem>
           <Divider />
           <form onSubmit={handleLogout}>
-            <MenuItem component="button" type="submit">
+            <MenuItem
+              component="button"
+              sx={{
+                width: "100%",
+              }}
+              type="submit"
+            >
               Exit
             </MenuItem>
           </form>
