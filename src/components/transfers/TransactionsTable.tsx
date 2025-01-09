@@ -23,6 +23,7 @@ import { PERMISSIONS } from "@/app/permissions";
 import { createClient } from "@/utils/supabase/server";
 import SearchBar from "../common/SearchBar";
 import Link from "next/link";
+import DeleteButton from "./DeleteButton";
 
 export default async function TransactionsTable({
   searchParams,
@@ -118,9 +119,7 @@ export default async function TransactionsTable({
                     <RequirePermission
                       permission={PERMISSIONS.DELETE_TRANSFERS}
                     >
-                      <IconButton type="submit" color="error">
-                        <DeleteIcon />
-                      </IconButton>
+                      <DeleteButton id={row.id} />
                     </RequirePermission>
                   </TableCell>
                 </RequirePermission>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, FormEvent } from "react";
+import React, { useState, useEffect, useTransition, FormEvent } from "react";
 
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -12,6 +12,10 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
+
+import CircularProgress from "@mui/material/CircularProgress";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 import { createTransfer } from "./actions";
 import { createClient } from "@/utils/supabase/client";
@@ -31,6 +35,14 @@ export default function Page() {
     transmitter: "",
     service: "",
   });
+
+  const [isPending, startTransition] = useTransition();
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
+    "error"
+  );
 
   useEffect(() => {
     async function fetchData() {
@@ -95,27 +107,38 @@ export default function Page() {
     const isValid = validateForm();
 
     if (isValid) {
-      const formData = new FormData();
-      formData.append("plate", plate);
-      formData.append("type", type);
-      formData.append("client", client);
-      formData.append("transmitter", transmitter);
-      formData.append("service", service);
+      startTransition(async () => {
+        const formData = new FormData();
+        formData.append("plate", plate);
+        formData.append("type", type);
+        formData.append("client", client);
+        formData.append("transmitter", transmitter);
+        formData.append("service", service);
 
-      const response = await createTransfer(formData);
+        const response = await createTransfer(formData);
 
-      if (response.error) {
-        alert("Error creating transfer: " + response.error);
-      } else {
-        alert("Transfer created successfully!");
-        setPlate("");
-        setType("");
-        setClient("");
-        setTransmitter("");
-        setService("");
-      }
+        if (response.error) {
+          setSnackbarMessage("Error creating transfer: " + response.error);
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
+        } else {
+          setSnackbarMessage("Transfer created successfully!");
+          setSnackbarSeverity("success");
+          setSnackbarOpen(true);
+
+          setPlate("");
+          setType("");
+          setClient("");
+          setTransmitter("");
+          setService("");
+        }
+      });
     }
   }
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
@@ -215,12 +238,28 @@ export default function Page() {
               />
             </FormControl>
 
-            <Button type="submit" variant="contained" color="primary">
-              Create Transfer
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={isPending}
+            >
+              {isPending ? <CircularProgress size={24} /> : "Create Transfer"}
             </Button>
           </Box>
         </Box>
       </Card>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }
