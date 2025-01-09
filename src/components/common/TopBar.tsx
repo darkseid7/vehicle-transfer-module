@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import {
   AppBar,
   Avatar,
@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useUser } from "@/app/context/userContext";
+import { logoutAction } from "@/app/(dashboard)/dashboard/actions";
 
 interface TopBarProps {
   onMenuClick: () => void;
@@ -31,9 +32,13 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    console.log("Logout");
-    handleCloseMenu();
+  const handleLogout = async (event: FormEvent) => {
+    event.preventDefault();
+    try {
+      await logoutAction();
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   return (
@@ -58,15 +63,29 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
 
         <Box sx={{ flexGrow: 1 }} />
 
-        <Typography variant="body1" sx={{ mr: 2 }}>
-          {user?.email}
-        </Typography>
-        <Typography variant="body2" sx={{ mr: 2 }}>
-          {role}
-        </Typography>
+        <Box
+          sx={{
+            display: {
+              xs: "none",
+              sm: "flex",
+              flexDirection: "column",
+              gap: 2,
+            },
+          }}
+        >
+          <Typography variant="body1" sx={{ mr: 2 }}>
+            {user?.email}
+          </Typography>
+          <Typography variant="body2" sx={{ mr: 2 }}>
+            {role}
+          </Typography>
+        </Box>
 
         <IconButton onClick={handleAvatarClick} sx={{ p: 0 }}>
-          <Avatar alt="User Photo" src="https://via.placeholder.com/150" />
+          <Avatar
+            alt="User Photo"
+            src={`https://ui-avatars.com/api/?name=${user?.email}&background=7D2DFE&color=fff&rounded=true&font-size=0.5&format=svg&size=76`}
+          />
         </IconButton>
 
         <Menu
@@ -76,9 +95,13 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
         >
-          <MenuItem disabled>Perfil</MenuItem>
+          <MenuItem disabled>Profile</MenuItem>
           <Divider />
-          <MenuItem onClick={handleLogout}>Exit</MenuItem>
+          <form onSubmit={handleLogout}>
+            <MenuItem component="button" type="submit">
+              Exit
+            </MenuItem>
+          </form>
         </Menu>
       </Toolbar>
     </AppBar>
