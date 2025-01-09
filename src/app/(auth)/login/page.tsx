@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useTransition } from "react";
 
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -10,6 +10,9 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import { login } from "./actions";
 
@@ -22,7 +25,11 @@ export default function Page() {
     invalidCredentials: "",
   });
 
-  function validateForm() {
+  const [isPending, startTransition] = useTransition();
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const validateForm = () => {
     let tempErrors = { email: "", password: "", invalidCredentials: "" };
     let isValid = true;
 
@@ -47,27 +54,37 @@ export default function Page() {
 
     setErrors(tempErrors);
     return isValid;
-  }
+  };
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const isValid = validateForm();
 
     if (isValid) {
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("password", password);
+      startTransition(async () => {
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
 
-      let response = await login(formData);
+        const response = await login(formData);
 
-      if (response.error === "Invalid login credentials") {
-        setErrors({ ...errors, invalidCredentials: response.error });
-      }
-
-      console.log(response, " response from login function");
+        if (response.error === "Invalid login credentials") {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            invalidCredentials: response.error,
+          }));
+          setSnackbarOpen(true);
+        } else {
+          console.log(response, " response from login function");
+        }
+      });
     }
-  }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
 
   return (
     <Container
@@ -91,11 +108,6 @@ export default function Page() {
             Login
           </Typography>
 
-          {errors.invalidCredentials && (
-            <Typography variant="h6" align="center" color="error">
-              {errors.invalidCredentials}
-            </Typography>
-          )}
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -135,12 +147,29 @@ export default function Page() {
               />
             </FormControl>
 
-            <Button type="submit" variant="contained" color="primary">
-              Login
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={isPending}
+              startIcon={isPending && <CircularProgress size={20} />}
+            >
+              {isPending ? "Logging in" : "Login"}
             </Button>
           </Box>
         </Box>
       </Card>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert onClose={handleSnackbarClose} severity="error">
+          {errors.invalidCredentials}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }
