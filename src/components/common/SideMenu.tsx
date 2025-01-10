@@ -69,6 +69,25 @@ export default function SideMenu({
           "& .MuiListItemIcon-root": { color: "white" },
         }}
       >
+        <ListItem disablePadding>
+          <ListItemButton selected={isActive("/dashboard")}>
+            <Link
+              href={"/dashboard"}
+              style={{
+                display: "flex",
+                gap: "2px",
+                alignItems: "center",
+                textDecoration: "none",
+                width: "100%",
+              }}
+            >
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </Link>
+          </ListItemButton>
+        </ListItem>
         <RequirePermission permission={PERMISSIONS.CREATE_TRANSFERS}>
           <ListItem disablePadding>
             <ListItemButton selected={isActive("/transfer")}>
@@ -90,25 +109,6 @@ export default function SideMenu({
             </ListItemButton>
           </ListItem>
         </RequirePermission>
-        <ListItem disablePadding>
-          <ListItemButton selected={isActive("/dashboard")}>
-            <Link
-              href={"/dashboard"}
-              style={{
-                display: "flex",
-                gap: "2px",
-                alignItems: "center",
-                textDecoration: "none",
-                width: "100%",
-              }}
-            >
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary="Dashboard" />
-            </Link>
-          </ListItemButton>
-        </ListItem>
       </List>
     </>
   );
