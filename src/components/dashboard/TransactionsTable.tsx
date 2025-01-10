@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Table,
   TableHead,
@@ -53,26 +53,27 @@ export default function TransactionsTable() {
   const searchParams = useSearchParams();
   const searchQuery = searchParams.get("q") || "";
 
-  useEffect(() => {
-    async function fetchData() {
-      const supabase = createClient();
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    const supabase = createClient();
 
-      const { data, error } = await supabase
-        .from("transfers")
-        .select("*")
-        .order("created_at", { ascending: false });
+    const { data, error } = await supabase
+      .from("transfers")
+      .select("*")
+      .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Failed to fetch transfers:", error);
-      } else {
-        setTransactions(data || []);
-        setPlates(Array.from(new Set(data?.map((t) => t.plate))));
-      }
-      setLoading(false);
+    if (error) {
+      console.error("Failed to fetch transfers:", error);
+    } else {
+      setTransactions(data || []);
+      setPlates(Array.from(new Set(data?.map((t) => t.plate))));
     }
-
-    fetchData();
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -88,6 +89,10 @@ export default function TransactionsTable() {
       : true;
     return matchesPlate && matchesType && matchesSearch;
   });
+
+  const handleDeleteSuccess = () => {
+    fetchData();
+  };
 
   return (
     <Container>
@@ -154,6 +159,10 @@ export default function TransactionsTable() {
         <Box sx={{ textAlign: "center", mt: 4 }}>
           <CircularProgress size={40} color="primary" />
         </Box>
+      ) : filteredTransactions.length === 0 ? (
+        <Typography variant="h6" sx={{ textAlign: "center", mt: 4 }}>
+          No transfers found.
+        </Typography>
       ) : (
         <TableContainer component={Paper}>
           <Table>
@@ -204,7 +213,10 @@ export default function TransactionsTable() {
                       <RequirePermission
                         permission={PERMISSIONS.DELETE_TRANSFERS}
                       >
-                        <DeleteButton id={Number(row.id)} />
+                        <DeleteButton
+                          id={Number(row.id)}
+                          onDeleteSuccess={handleDeleteSuccess}
+                        />
                       </RequirePermission>
                     </TableCell>
                   </RequirePermission>

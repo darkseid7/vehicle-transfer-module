@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { revalidatePath } from "next/cache";
+
 import { redirect } from "next/navigation";
 
 export async function deleteTransfer(id: number) {
@@ -13,7 +13,6 @@ export async function deleteTransfer(id: number) {
     return { error: "Failed to delete transfer." };
   }
 
-  revalidatePath("/dashboard");
   return { success: true };
 }
 

@@ -19,9 +19,13 @@ import { deleteTransfer } from "@/app/(dashboard)/dashboard/actions";
 
 interface DeleteButtonProps {
   id: number;
+  onDeleteSuccess?: () => void;
 }
 
-export default function DeleteButton({ id }: DeleteButtonProps) {
+export default function DeleteButton({
+  id,
+  onDeleteSuccess,
+}: DeleteButtonProps) {
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -46,6 +50,9 @@ export default function DeleteButton({ id }: DeleteButtonProps) {
       } else {
         setSnackbarMessage("Transfer deleted successfully!");
         setSnackbarSeverity("success");
+        if (onDeleteSuccess) {
+          onDeleteSuccess();
+        }
       }
 
       setSnackbarOpen(true);
