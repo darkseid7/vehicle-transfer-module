@@ -9,10 +9,13 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Divider,
 } from "@mui/material";
+import { RequirePermission } from "@/components/common/RequirePermission";
+import { PERMISSIONS } from "@/app/permissions";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const drawerWidth = 240;
 
@@ -27,6 +30,12 @@ export default function SideMenu({
   handleDrawerClose,
   handleDrawerTransitionEnd,
 }: SideMenuProps) {
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    return pathname === href;
+  };
+
   const desktopDrawer = (
     <>
       <Toolbar>
@@ -35,6 +44,7 @@ export default function SideMenu({
           align="center"
           noWrap
           sx={{
+            mt: 2,
             color: "white",
             letterSpacing: 4,
             width: "100%",
@@ -50,20 +60,53 @@ export default function SideMenu({
           <Link href={"/dashboard"}>VTM</Link>
         </Typography>
       </Toolbar>
-      <Divider />
+
       <List
         sx={{
+          mt: 2,
           color: "white",
           "& .MuiListItemButton-root": { color: "white" },
           "& .MuiListItemIcon-root": { color: "white" },
         }}
       >
+        <RequirePermission permission={PERMISSIONS.CREATE_TRANSFERS}>
+          <ListItem disablePadding>
+            <ListItemButton selected={isActive("/transfer")}>
+              <Link
+                href={"/transfer"}
+                style={{
+                  display: "flex",
+                  gap: "2px",
+                  alignItems: "center",
+                  textDecoration: "none",
+                  width: "100%",
+                }}
+              >
+                <ListItemIcon>
+                  <SwapHorizIcon />
+                </ListItemIcon>
+                <ListItemText primary="Transfers" />
+              </Link>
+            </ListItemButton>
+          </ListItem>
+        </RequirePermission>
         <ListItem disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <SwapHorizIcon />
-            </ListItemIcon>
-            <ListItemText primary="Transfers" />
+          <ListItemButton selected={isActive("/dashboard")}>
+            <Link
+              href={"/dashboard"}
+              style={{
+                display: "flex",
+                gap: "2px",
+                alignItems: "center",
+                textDecoration: "none",
+                width: "100%",
+              }}
+            >
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </Link>
           </ListItemButton>
         </ListItem>
       </List>

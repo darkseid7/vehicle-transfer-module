@@ -30,7 +30,7 @@ interface TransferFormProps {
   onSubmit: (data: FormData) => Promise<{ error?: string } | undefined>;
 }
 
-interface User {
+interface Entity {
   id: string;
   document: string;
   name: string;
@@ -47,9 +47,10 @@ export default function TransferForm({
   const [transmitter, setTransmitter] = useState(
     initialValues.transmitter || ""
   );
-
   const [service, setService] = useState(initialValues.service || "");
-  const [users, setUsers] = useState<User[]>([]);
+
+  const [clients, setClients] = useState<Entity[]>([]);
+  const [transmitters, setTransmitters] = useState<Entity[]>([]);
   const [errors, setErrors] = useState({
     plate: "",
     type: "",
@@ -69,14 +70,19 @@ export default function TransferForm({
   useEffect(() => {
     async function fetchData() {
       const supabase = createClient();
-      const { data: usersData, error: usersError } = await supabase
-        .from("users")
-        .select("*");
+      try {
+        const { data: clientsData, error: clientsError } = await supabase
+          .from("clients")
+          .select("*");
+        if (clientsError) throw clientsError;
+        setClients(clientsData || []);
 
-      if (usersError) {
-        console.error("Error fetching users:", usersError);
-      } else {
-        setUsers(usersData || []);
+        const { data: transmittersData, error: transmittersError } =
+          await supabase.from("transmitters").select("*");
+        if (transmittersError) throw transmittersError;
+        setTransmitters(transmittersData || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
     }
 
@@ -193,7 +199,6 @@ export default function TransferForm({
                 fullWidth
                 error={Boolean(errors.type)}
               >
-                <MenuItem value="">Select type</MenuItem>
                 <MenuItem value="venta">Sale</MenuItem>
                 <MenuItem value="cesion">Assignment</MenuItem>
               </Select>
@@ -209,10 +214,9 @@ export default function TransferForm({
                 fullWidth
                 error={Boolean(errors.client)}
               >
-                <MenuItem value="">Select client</MenuItem>
-                {users.map((u) => (
-                  <MenuItem key={u.id} value={u.document}>
-                    {u.name}
+                {clients.map((c) => (
+                  <MenuItem key={c.id} value={c.document}>
+                    {c.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -228,10 +232,9 @@ export default function TransferForm({
                 fullWidth
                 error={Boolean(errors.transmitter)}
               >
-                <MenuItem value="">Select transmitter</MenuItem>
-                {users.map((u) => (
-                  <MenuItem key={u.id} value={u.document}>
-                    {u.name}
+                {transmitters.map((t) => (
+                  <MenuItem key={t.id} value={t.document}>
+                    {t.name}
                   </MenuItem>
                 ))}
               </Select>

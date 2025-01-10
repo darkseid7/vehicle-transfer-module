@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { updateTransfer } from "../actions";
-import TransferForm from "@/components/transfers/TransferForm";
+import TransferForm from "@/components/dashboard/TransferForm";
 import { createClient } from "@/utils/supabase/client";
 
 export default function EditTransferPageClient() {
