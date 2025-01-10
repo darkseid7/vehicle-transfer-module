@@ -146,12 +146,6 @@ export default function TransferForm({
           setSnackbarMessage("Action completed successfully!");
           setSnackbarSeverity("success");
           setSnackbarOpen(true);
-
-          setPlate("");
-          setType("");
-          setClient("");
-          setTransmitter("");
-          setService("");
         }
       });
     }
