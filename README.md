@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VTM Project
 
-## Getting Started
+This is a [Next.js](https://nextjs.org) project for vehicle transfer management.
 
-First, run the development server:
+## Clone and Run the Project
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Follow these steps to clone and run the project on your local machine:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. Clone the repository:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ```bash
+   git clone https://github.com/darkseid7/vehicle-transfer-module
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. Navigate to the project directory:
 
-## Learn More
+   ```bash
+   cd vehicle-transfer-module
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+3. Install the dependencies:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```bash
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. Run the development server:
 
-## Deploy on Vercel
+   ```bash
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Implemented Features
+
+### Vehicle Transfer Management
+
+- **Dashboard**: An overview of vehicle transfers.
+- **Authentication**: User authentication implementation.
+- **User Management**: Allows creation, editing, and deletion of users.
+- **Notifications**: Notification system to alert users about important events.
+- **Transfer History**: Record of all transfers made.
+
+### Components
+
+- **SideMenu**: Side menu with navigation to different sections of the dashboard.
+- **DashboardLayout**: Common layout for dashboard pages.
+- **UserContext**: Context to manage user state throughout the application.
+
+### Utilities
+
+- **Supabase**: Used for database management and authentication.
+- **Theme**: Custom theme using Material-UI.
+
+### Technologies
+
+- **Nextjs 15**
+- **Material UI**
+- **Supabase**
+
+## Deployment on Render
+
+- [https://vehicle-transfer-module.onrender.com](https://vehicle-transfer-module.onrender.com)
