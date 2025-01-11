@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition, FormEvent } from "react";
+import React, { useState, useTransition, FormEvent } from "react";
 
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -16,7 +16,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 
-import { createClient } from "@/utils/supabase/client";
+import { useClientsAndTransmitters } from "@/hooks/useClientsAndTransmitters";
 
 interface TransferFormProps {
   title?: string;
@@ -28,12 +28,6 @@ interface TransferFormProps {
     service?: string;
   };
   onSubmit: (data: FormData) => Promise<{ error?: string } | undefined>;
-}
-
-interface Entity {
-  id: string;
-  document: string;
-  name: string;
 }
 
 export default function TransferForm({
@@ -49,8 +43,8 @@ export default function TransferForm({
   );
   const [service, setService] = useState(initialValues.service || "");
 
-  const [clients, setClients] = useState<Entity[]>([]);
-  const [transmitters, setTransmitters] = useState<Entity[]>([]);
+  const { clients, transmitters, loading, error } = useClientsAndTransmitters();
+
   const [errors, setErrors] = useState({
     plate: "",
     type: "",
@@ -66,28 +60,6 @@ export default function TransferForm({
   const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error">(
     "error"
   );
-
-  useEffect(() => {
-    async function fetchData() {
-      const supabase = createClient();
-      try {
-        const { data: clientsData, error: clientsError } = await supabase
-          .from("clients")
-          .select("*");
-        if (clientsError) throw clientsError;
-        setClients(clientsData || []);
-
-        const { data: transmittersData, error: transmittersError } =
-          await supabase.from("transmitters").select("*");
-        if (transmittersError) throw transmittersError;
-        setTransmitters(transmittersData || []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-
-    fetchData();
-  }, []);
 
   function validateForm() {
     const tempErrors = {
@@ -155,6 +127,22 @@ export default function TransferForm({
     setSnackbarOpen(false);
   };
 
+  if (loading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <CircularProgress size={24} />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Typography color="error" variant="h6" align="center" sx={{ mt: 4 }}>
+        {error}
+      </Typography>
+    );
+  }
+
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
       <Card sx={{ p: 4, width: "100%" }}>
@@ -196,6 +184,11 @@ export default function TransferForm({
                 <MenuItem value="venta">Sale</MenuItem>
                 <MenuItem value="cesion">Assignment</MenuItem>
               </Select>
+              {errors.type && (
+                <Typography color="error" variant="caption">
+                  {errors.type}
+                </Typography>
+              )}
             </FormControl>
 
             <FormControl>
@@ -214,6 +207,11 @@ export default function TransferForm({
                   </MenuItem>
                 ))}
               </Select>
+              {errors.client && (
+                <Typography color="error" variant="caption">
+                  {errors.client}
+                </Typography>
+              )}
             </FormControl>
 
             <FormControl>
@@ -232,6 +230,11 @@ export default function TransferForm({
                   </MenuItem>
                 ))}
               </Select>
+              {errors.transmitter && (
+                <Typography color="error" variant="caption">
+                  {errors.transmitter}
+                </Typography>
+              )}
             </FormControl>
 
             <FormControl>
